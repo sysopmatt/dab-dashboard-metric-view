@@ -1,0 +1,3 @@
+# Local bundle deployment state (contains workspace-specific IDs)
+.databricks/
+.DS_Store

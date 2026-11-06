@@ -1,0 +1,16 @@
+# Dashboard whose datasets query the UC metric view claims_metrics
+# (one SQL dataset using MEASURE(), one dataset bound directly to the metric view).
+# The dashboard JSON uses the short name; catalog/schema are resolved per target
+# via dataset_catalog / dataset_schema.
+resources:
+  dashboards:
+    healthcare_claims_analytics:
+      display_name: 'Healthcare Claims Analytics (Metric View)'
+      file_path: ../src/healthcare_claims_analytics.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+      dataset_catalog: ${var.catalog}
+      dataset_schema: ${var.schema}
+      embed_credentials: false
+      permissions:
+        - group_name: users
+          level: CAN_READ

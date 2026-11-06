@@ -1,0 +1,620 @@
+{
+  "datasets": [
+    {
+      "name": "2e7d77f6",
+      "displayName": "Monthly Total Paid: Senior vs Other Age Bands",
+      "queryLines": [
+        "SELECT \n",
+        "  date_trunc('MONTH', `Service Month`) AS `month`,\n",
+        "  CASE WHEN `Age Band` = 'Senior (65+)' THEN 'Senior (65+)' ELSE 'Other Age Bands' END AS `group`,\n",
+        "  MEASURE(`Total Paid`) AS `total_paid`\n",
+        "FROM `claims_metrics`\n",
+        "WHERE `Age Band` IS NOT NULL\n",
+        "GROUP BY ALL\n",
+        "ORDER BY `month` ASC"
+      ],
+      "catalog": "madams",
+      "schema": "data_mart"
+    },
+    {
+      "name": "claims_mv",
+      "displayName": "Claims Metrics",
+      "asset_name": "claims_metrics",
+      "catalog": "madams",
+      "schema": "data_mart"
+    }
+  ],
+  "pages": [
+    {
+      "name": "ca1d526b",
+      "displayName": "Untitled Page",
+      "layout": [
+        {
+          "widget": {
+            "name": "a0c58d66",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2e7d77f6",
+                  "fields": [
+                    {
+                      "name": "month",
+                      "expression": "`month`"
+                    },
+                    {
+                      "name": "total_paid",
+                      "expression": "`total_paid`"
+                    },
+                    {
+                      "name": "group",
+                      "expression": "`group`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Monthly Total Paid: Senior vs Other Age Bands"
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "month",
+                  "displayName": "Service Month",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "total_paid",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  },
+                  "displayName": "Total Paid",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "group",
+                  "displayName": "Age Group",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Senior (65+)",
+                        "Other Age Bands"
+                      ]
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "total_paid_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "claims_mv",
+                  "fields": [
+                    {
+                      "name": "measure(Total Paid)",
+                      "expression": "MEASURE(`Total Paid`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Total Paid"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Total Paid)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "claim_count_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "claims_mv",
+                  "fields": [
+                    {
+                      "name": "measure(Claim Count)",
+                      "expression": "MEASURE(`Claim Count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Total Claims"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Claim Count)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 0,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "denial_rate_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "claims_mv",
+                  "fields": [
+                    {
+                      "name": "measure(Denial Rate)",
+                      "expression": "MEASURE(`Denial Rate`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Denial Rate"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Denial Rate)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "pmpm_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "claims_mv",
+                  "fields": [
+                    {
+                      "name": "measure(PMPM Paid)",
+                      "expression": "MEASURE(`PMPM Paid`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "PMPM Paid"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(PMPM Paid)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "paid_by_lob",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "claims_mv",
+                  "fields": [
+                    {
+                      "name": "Line of Business",
+                      "expression": "`Line of Business`"
+                    },
+                    {
+                      "name": "measure(Total Paid)",
+                      "expression": "MEASURE(`Total Paid`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Total Paid by Line of Business"
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Line of Business",
+                  "displayName": "Line of Business",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Paid)",
+                  "displayName": "Total Paid",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Line of Business",
+                  "displayName": "Line of Business",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "claims_by_status",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "claims_mv",
+                  "fields": [
+                    {
+                      "name": "measure(Claim Count)",
+                      "expression": "MEASURE(`Claim Count`)"
+                    },
+                    {
+                      "name": "Claim Status",
+                      "expression": "`Claim Status`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Claim Count by Status"
+              },
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "measure(Claim Count)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Claim Count"
+                },
+                "color": {
+                  "fieldName": "Claim Status",
+                  "displayName": "Claim Status",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 6,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "paid_by_month",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "claims_mv",
+                  "fields": [
+                    {
+                      "name": "Service Month",
+                      "expression": "`Service Month`"
+                    },
+                    {
+                      "name": "measure(Total Paid)",
+                      "expression": "MEASURE(`Total Paid`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Monthly Total Paid Trend"
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "Service Month",
+                  "displayName": "Service Month",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Paid)",
+                  "displayName": "Total Paid",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Service Month",
+                  "displayName": "Service Month",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "paid_by_specialty",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "claims_mv",
+                  "fields": [
+                    {
+                      "name": "Provider Specialty",
+                      "expression": "`Provider Specialty`"
+                    },
+                    {
+                      "name": "measure(Total Paid)",
+                      "expression": "MEASURE(`Total Paid`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Total Paid by Provider Specialty"
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Provider Specialty",
+                  "displayName": "Provider Specialty",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Paid)",
+                  "displayName": "Total Paid",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Provider Specialty",
+                  "displayName": "Provider Specialty",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "claims_table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "claims_mv",
+                  "fields": [
+                    {
+                      "name": "Diagnosis Category",
+                      "expression": "`Diagnosis Category`"
+                    },
+                    {
+                      "name": "measure(Claim Count)",
+                      "expression": "MEASURE(`Claim Count`)"
+                    },
+                    {
+                      "name": "measure(Total Paid)",
+                      "expression": "MEASURE(`Total Paid`)"
+                    },
+                    {
+                      "name": "measure(Total Allowed)",
+                      "expression": "MEASURE(`Total Allowed`)"
+                    },
+                    {
+                      "name": "measure(Denial Rate)",
+                      "expression": "MEASURE(`Denial Rate`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Claims Summary by Diagnosis Category"
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "Diagnosis Category"
+                  },
+                  {
+                    "fieldName": "measure(Claim Count)"
+                  },
+                  {
+                    "fieldName": "measure(Total Paid)"
+                  },
+                  {
+                    "fieldName": "measure(Total Allowed)"
+                  },
+                  {
+                    "fieldName": "measure(Denial Rate)"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 18,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
